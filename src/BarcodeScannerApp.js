@@ -52,6 +52,9 @@ const BarcodeScannerApp = () => {
                     onChange={handleBarcodeInput}
                     onKeyDown={handleKeyPress}
                     placeholder="バーコードを入力してください (13桁)"
+                    inputMode="numeric"
+                    pattern="[0-9]*" 
+                    className="mb-4"
                     style={{ width: '100%', padding: '8px', marginBottom: '1rem' }}
                 />
                 <div style={{ marginBottom: '1rem' }}>
