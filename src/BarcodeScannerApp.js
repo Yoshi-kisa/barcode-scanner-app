@@ -44,7 +44,7 @@ const BarcodeScannerApp = () => {
     return (
         <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '20px' }}>
             <div style={{ border: '1px solid #ccc', borderRadius: '8px', padding: '20px', width: '100%', maxWidth: '400px' }}>
-                <h1 style={{ fontSize: '1.5rem', marginBottom: '1rem' }}>バーコードスキャナーアプリ</h1>
+                <h1 style={{ fontSize: '1.5rem', marginBottom: '1rem' }}>廃棄集計アプリ</h1>
                 <input
                     type="text"
                     ref={inputRef}
