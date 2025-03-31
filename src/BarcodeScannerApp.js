@@ -15,7 +15,7 @@ const BarcodeScannerApp = () => {
         const value = e.target.value;
         if (/^\d{13}$/.test(value)) {
             const extractedNumber = parseInt(value.slice(7, 12), 10); // 左から8〜12桁目を抽出 (税込価格)
-            const basePrice = Math.round(extractedNumber / 1.08); // 税抜価格を計算 (8%消費税として計算)
+            const basePrice = Math.ceil(extractedNumber / 1.08); // 税抜価格を計算 (8%消費税として計算)
             setNumbers(prev => [...prev, basePrice]);
             setSum(prevSum => prevSum + basePrice);
             setBarcode('');
@@ -27,7 +27,7 @@ const BarcodeScannerApp = () => {
     const handleKeyPress = (e) => {
         if (e.key === 'Enter' && /^\d{13}$/.test(barcode)) {
             const extractedNumber = parseInt(barcode.slice(7, 12), 10); // 左から8〜12桁目を抽出 (税込価格)
-            const basePrice = Math.round(extractedNumber / 1.08); // 税抜価格を計算 (8%消費税として計算)
+            const basePrice = Math.ceil(extractedNumber / 1.08); // 税抜価格を計算 (8%消費税として計算)
             setNumbers(prev => [...prev, basePrice]);
             setSum(prevSum => prevSum + basePrice);
             setBarcode('');
