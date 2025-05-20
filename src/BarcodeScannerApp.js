@@ -9,6 +9,7 @@ const BarcodeScannerApp = () => {
 
     const location = '本店';
     const scriptUrl = 'https://script.google.com/macros/s/AKfycbzEveX2Nw5rzGdSuRFn2N2ZXI86LyGkys0CWjuOL95wycDMH-WMowx7poERRum3ms81/exec';
+
     useEffect(() => {
         inputRef.current?.focus();
     }, [barcode]);
