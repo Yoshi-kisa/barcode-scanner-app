@@ -8,7 +8,7 @@ const BarcodeScannerApp = () => {
     const inputRef = useRef(null);
 
     const location = '本店';
-    const scriptUrl = 'https://script.google.com/macros/s/AKfycbwzir7GwTvU42NUA2gbtrKaQG7qIWmiZL0-C86PNFspXci3_HuWeFHjFadl51EAfVmpZQ/exec';
+    const scriptUrl = 'https://script.google.com/macros/s/AKfycbzEveX2Nw5rzGdSuRFn2N2ZXI86LyGkys0CWjuOL95wycDMH-WMowx7poERRum3ms81/exec';
     useEffect(() => {
         inputRef.current?.focus();
     }, [barcode]);
