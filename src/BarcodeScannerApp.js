@@ -8,7 +8,7 @@ const BarcodeScannerApp = () => {
     const inputRef = useRef(null);
 
     const location = '本店';
-    const scriptUrl = 'https://script.google.com/macros/s/AKfycbx7UeAs-URqrhnUK4qGluwaMehR4gvC8l0mo3bgLEqnZAQB5kqAb43yipU-0WhM8a9S/exec';
+    const scriptUrl = 'https://script.google.com/macros/s/AKfycbxKGf8-nq5SqPDOLdq-AZ-etMM0beZPplDb1-UmxlqY8xSrBxRatkgRvYMhfeI4CiBKXw/exec';
 
     useEffect(() => {
         inputRef.current?.focus();
@@ -16,11 +16,20 @@ const BarcodeScannerApp = () => {
 
     const sendToGoogleSheet = async (barcode, basePrice) => {
         try {
-            await axios.post(scriptUrl, {
-                location,
-                barcode,
-                price: basePrice
-            });
+            const response = await axios.post(
+                scriptUrl,
+                {
+                    location,
+                    barcode,
+                    price: basePrice
+                },
+                {
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                }
+            );
+            console.log('送信成功:', response.data);
         } catch (error) {
             console.error('送信エラー:', error);
         }
