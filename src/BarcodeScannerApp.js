@@ -4,7 +4,7 @@ import axios from 'axios';
 const BarcodeScannerApp = () => {
     const [barcode, setBarcode] = useState('');
     const [sum, setSum] = useState(0);
-    const [numbers, setNumbers] = useState([]);
+    const [records, setRecords] = useState([]);
     const inputRef = useRef(null);
 
     const location = '本店';
@@ -45,7 +45,7 @@ const BarcodeScannerApp = () => {
             console.error("送信中にエラーが発生しました", err);
         }
 
-        setNumbers(prev => [...prev, basePrice]);
+        setRecords(prev => [...prev, { barcode: value, price: basePrice }]);
         setSum(prevSum => prevSum + basePrice);
         setBarcode('');
     };
@@ -68,16 +68,16 @@ const BarcodeScannerApp = () => {
     const handleReset = () => {
         setBarcode('');
         setSum(0);
-        setNumbers([]);
+        setRecords([]);
         inputRef.current?.focus();
     };
 
     const handleDownloadCSV = () => {
-        const header = ['No', '読み取り金額'];
-        const rows = numbers.map((num, i) => [i + 1, num]);
+        const header = ['No', 'バーコード', '税抜金額'];
+        const rows = records.map((record, i) => [i + 1, record.barcode, record.price]);
 
         const csvContent = [header, ...rows].map(e => e.join(',')).join('\n');
-        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        const blob = new Blob(["\uFEFF" + csvContent], { type: 'text/csv;charset=utf-8;' });
         const url = URL.createObjectURL(blob);
         const link = document.createElement('a');
         link.setAttribute('href', url);
@@ -106,8 +106,8 @@ const BarcodeScannerApp = () => {
                 <div style={{ marginBottom: '1rem' }}>
                     <strong>読み取った税抜金額:</strong>
                     <ul>
-                        {numbers.map((num, index) => (
-                            <li key={index}>{num}</li>
+                        {records.map((r, index) => (
+                            <li key={index}>{r.price}</li>
                         ))}
                     </ul>
                 </div>
