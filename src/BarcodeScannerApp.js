@@ -59,21 +59,22 @@ const BarcodeScannerApp = () => {
     };
 
     const handleDownloadCSV = () => {
-        const header = ['No', '価格', '日時'];
-        const rows = entries.map((entry, i) => [
-            i + 1,
-            entry.price,
-            new Date().toLocaleString('ja-JP'),
-        ]);
-
+        const header = ['No', '税抜価格'];
+        const rows = numbers.map((item, i) => [i + 1, item.price]);
+    
         const csvContent = [header, ...rows].map(e => e.join(',')).join('\n');
-        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    
+        // UTF-8 BOMを付加
+        const bom = new Uint8Array([0xEF, 0xBB, 0xBF]);
+        const blob = new Blob([bom, csvContent], { type: 'text/csv;charset=utf-8;' });
+    
         const url = URL.createObjectURL(blob);
         const link = document.createElement('a');
-        link.href = url;
-        link.download = `scan_data_${Date.now()}.csv`;
+        link.setAttribute('href', url);
+        link.setAttribute('download', `scan_data_${Date.now()}.csv`);
         link.click();
     };
+    
 
     return (
         <div style={{ padding: '20px', maxWidth: '400px', margin: 'auto' }}>
