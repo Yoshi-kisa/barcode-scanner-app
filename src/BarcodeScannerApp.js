@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import axios from 'axios';
+import { supabase } from './supabaseClient';
 
 const BarcodeScannerApp = () => {
     const [barcode, setBarcode] = useState('');
@@ -8,32 +8,10 @@ const BarcodeScannerApp = () => {
     const inputRef = useRef(null);
 
     const location = '本店';
-    const scriptUrl = 'https://script.google.com/macros/s/AKfycbzEveX2Nw5rzGdSuRFn2N2ZXI86LyGkys0CWjuOL95wycDMH-WMowx7poERRum3ms81/exec';
 
     useEffect(() => {
         inputRef.current?.focus();
     }, [barcode]);
-
-    const sendToGoogleSheet = async (barcode, basePrice) => {
-        try {
-            const response = await axios.post(
-                scriptUrl,
-                {
-                    location,
-                    barcode,
-                    price: basePrice
-                },
-                {
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
-                }
-            );
-            console.log('送信成功:', response.data);
-        } catch (error) {
-            console.error('送信エラー:', error);
-        }
-    };
 
     const getTimestamp = () => {
         const now = new Date();
@@ -41,16 +19,28 @@ const BarcodeScannerApp = () => {
         return `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())} ${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())}`;
     };
 
+    const sendToSupabase = async (barcode, basePrice) => {
+        try {
+            const { data, error } = await supabase
+                .from('scans')
+                .insert([{ location, barcode, price: basePrice }]);
+
+            if (error) {
+                console.error('Supabase送信エラー:', error);
+            } else {
+                console.log('Supabase送信成功:', data);
+            }
+        } catch (err) {
+            console.error('通信エラー:', err);
+        }
+    };
+
     const handleBarcode = async (value) => {
         const extractedNumber = parseInt(value.slice(7, 12), 10);
         const basePrice = Math.ceil(extractedNumber / 1.08);
         const timestamp = getTimestamp();
 
-        try {
-            await sendToGoogleSheet(value, basePrice);
-        } catch (err) {
-            console.error("送信中にエラーが発生しました", err);
-        }
+        await sendToSupabase(value, basePrice);
 
         setEntries(prev => [...prev, { timestamp, barcode: value, basePrice }]);
         setSum(prevSum => prevSum + basePrice);
