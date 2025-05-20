@@ -73,23 +73,17 @@ const BarcodeScannerApp = () => {
     };
 
     const handleDownloadCSV = () => {
-        const header = ['タイムスタンプ', 'No', 'バーコード', '税抜金額'];
-        const rows = entries.map((entry, i) => [
-            entry.timestamp,
-            i + 1,
-            entry.barcode,
-            entry.basePrice
-        ]);
-    
-        const csvContent = '\uFEFF' + [header, ...rows].map(e => e.join(',')).join('\n'); // UTF-8 BOMつき
-        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        const header = ['No', 'バーコード', '税抜金額'];
+        const rows = records.map((record, i) => [i + 1, record.barcode, record.price]);
+
+        const csvContent = [header, ...rows].map(e => e.join(',')).join('\n');
+        const blob = new Blob(["\uFEFF" + csvContent], { type: 'text/csv;charset=utf-8;' });
         const url = URL.createObjectURL(blob);
         const link = document.createElement('a');
         link.setAttribute('href', url);
         link.setAttribute('download', `scan_data_${Date.now()}.csv`);
         link.click();
     };
-    
 
     return (
         <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '20px' }}>
