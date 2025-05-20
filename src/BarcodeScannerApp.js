@@ -8,8 +8,7 @@ const BarcodeScannerApp = () => {
     const inputRef = useRef(null);
 
     const location = '本店';
-    const scriptUrl = 'https://script.google.com/macros/s/AKfycbyAaHlF1Hw1KOT3AkiTjOCyX7O9y5In3wLbx6qtiDRW6n73nKeKEycTI1O55jJW8Wb6/exec';
-
+    const scriptUrl = 'https://script.google.com/macros/s/AKfycbzEveX2Nw5rzGdSuRFn2N2ZXI86LyGkys0CWjuOL95wycDMH-WMowx7poERRum3ms81/exec';
 
     useEffect(() => {
         inputRef.current?.focus();
@@ -73,6 +72,19 @@ const BarcodeScannerApp = () => {
         inputRef.current?.focus();
     };
 
+    const handleDownloadCSV = () => {
+        const header = ['No', '読み取り金額'];
+        const rows = numbers.map((num, i) => [i + 1, num]);
+
+        const csvContent = [header, ...rows].map(e => e.join(',')).join('\n');
+        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.setAttribute('href', url);
+        link.setAttribute('download', `scan_data_${Date.now()}.csv`);
+        link.click();
+    };
+
     return (
         <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '20px' }}>
             <div style={{ border: '1px solid #ccc', borderRadius: '8px', padding: '20px', width: '100%', maxWidth: '400px' }}>
@@ -99,7 +111,8 @@ const BarcodeScannerApp = () => {
                         ))}
                     </ul>
                 </div>
-                <button onClick={handleReset} style={{ padding: '8px 16px', borderRadius: '4px', cursor: 'pointer' }}>リセット</button>
+                <button onClick={handleReset} style={{ padding: '8px 16px', borderRadius: '4px', cursor: 'pointer', marginRight: '10px' }}>リセット</button>
+                <button onClick={handleDownloadCSV} style={{ padding: '8px 16px', borderRadius: '4px', cursor: 'pointer' }}>CSVダウンロード</button>
             </div>
         </div>
     );
