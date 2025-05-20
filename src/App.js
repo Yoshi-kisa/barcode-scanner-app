@@ -1,14 +1,8 @@
-// App.js
-
 import React from 'react';
-import BarcodeScannerApp from './BarcodeScannerApp'; // BarcodeScannerApp.js をインポート
+import BarcodeScannerApp from './BarcodeScannerApp';
 
 function App() {
-    return (
-        <div>
-            <BarcodeScannerApp />
-        </div>
-    );
+  return <BarcodeScannerApp />;
 }
 
 export default App;
