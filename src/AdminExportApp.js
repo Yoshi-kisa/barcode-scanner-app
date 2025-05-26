@@ -18,13 +18,15 @@ const AdminExportApp = () => {
       return;
     }
 
-    const header = ['timestamp', 'location', 'barcode', 'price'];
     const rows = data.map(row => [
-      row.created_at || '',
-      row.location || '',
-      row.barcode || '',
-      row.price ?? ''
-    ]);
+        row.created_at || '',
+        row.location || '',
+        `"${row.barcode || ''}"`,  // ← ダブルクオートで囲む
+        row.price ?? ''
+      ]);
+      
+      
+      
 
     const csv = [header, ...rows].map(r => r.join(',')).join('\n');
     const blob = new Blob(["\uFEFF" + csv], { type: 'text/csv;charset=utf-8;' });
