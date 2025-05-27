@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { supabase } from './supabaseClient';
 
 const storeOptions = [
- 　 '八戸店', '南佐賀店', 'LG鳥栖店', '鳥栖店', '高木瀬店',
+ 　 '〇〇店','八戸店', '南佐賀店', 'LG鳥栖店', '鳥栖店', '高木瀬店',
     '三日月店', '兵庫店', '小城店', '江北店', '多久店',
     '佐々中央店', '相浦店', '伊万里店', '伊万里松島店', '北鹿島店',
     '大村店', '東諌早店', '諫早幸町店', '北方店', '武雄店', 
