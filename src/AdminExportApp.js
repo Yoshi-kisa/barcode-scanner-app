@@ -4,36 +4,68 @@ import { supabase } from './supabaseClient';
 const AdminExportApp = () => {
   const [status, setStatus] = useState('');
 
+  const fetchAllData = async () => {
+    const allData = [];
+    const pageSize = 1000;
+    let from = 0;
+    let to = pageSize - 1;
+    let done = false;
+
+    while (!done) {
+      const { data, error } = await supabase
+        .from('scan_data')
+        .select('*')
+        .range(from, to);
+
+      if (error) {
+        throw new Error(error.message);
+      }
+
+      if (data.length === 0) {
+        done = true;
+      } else {
+        allData.push(...data);
+        if (data.length < pageSize) {
+          done = true;
+        } else {
+          from += pageSize;
+          to += pageSize;
+        }
+      }
+    }
+
+    return allData;
+  };
+
   const handleExportAll = async () => {
     setStatus('データ取得中...');
-    const { data, error } = await supabase.from('scan_data').select('*').limit(10000);
+    try {
+      const data = await fetchAllData();
 
-    if (error) {
-      setStatus(`エラー: ${error.message}`);
-      return;
+      if (!data || data.length === 0) {
+        setStatus('データが見つかりません');
+        return;
+      }
+
+      const header = ['timestamp', 'location', 'barcode', 'price'];
+      const rows = data.map(row => [
+        row.created_at || '',
+        row.location || '',
+        `"${row.barcode || ''}"`,
+        row.price ?? ''
+      ]);
+
+      const csv = [header, ...rows].map(r => r.join(',')).join('\n');
+      const blob = new Blob(["\uFEFF" + csv], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `supabase_export_${Date.now()}.csv`;
+      a.click();
+      setStatus('CSVをダウンロードしました');
+    } catch (err) {
+      setStatus('エラー: ' + err.message);
     }
-
-    if (!data || data.length === 0) {
-      setStatus('データが見つかりません');
-      return;
-    }
-
-    const header = ['timestamp', 'location', 'barcode', 'price'];
-    const rows = data.map(row => [
-      row.created_at || '',
-      row.location || '',
-      `"${row.barcode || ''}"`,  // ← ここでバーコードを文字列として囲む
-      row.price ?? ''
-    ]);
-
-    const csv = [header, ...rows].map(r => r.join(',')).join('\n');
-    const blob = new Blob(["\uFEFF" + csv], { type: 'text/csv;charset=utf-8;' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `supabase_export_${Date.now()}.csv`;
-    a.click();
-    setStatus('CSVをダウンロードしました');
   };
 
   return (
