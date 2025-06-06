@@ -95,7 +95,7 @@ const BarcodeScannerApp = () => {
             setLocation(e.target.value);
             inputRef.current?.focus();
           }}
-          style={{ width: '100%', padding: 8, marginBottom: 16 }}
+          style={{ width: '100%', padding: 8, marginBottom: 16,fontsize:'1.5rem' }}
         >
           {storeOptions.map((store, idx) => (
             <option key={idx} value={store}>{store}</option>
