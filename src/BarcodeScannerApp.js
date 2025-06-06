@@ -88,7 +88,7 @@ const BarcodeScannerApp = () => {
       <div style={{ border: '1px solid #ccc', borderRadius: 8, padding: 20, width: '100%', maxWidth: 400 }}>
         <h1 style={{ fontSize: '1.5rem', marginBottom: '1rem' }}>廃棄集計アプリ</h1>
 
-        <label>店舗を選択：</label>
+        <label>店舗を選択（下のリストから）↓↓</label>
         <select
           value={location}
           onChange={(e) => {
